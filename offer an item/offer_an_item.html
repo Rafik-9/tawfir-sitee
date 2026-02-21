@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offer an Item</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+    }
+
+    .page-wrapper {
+      display: flex;
+      gap: 32px;
+      max-width: 1100px;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    /* ══ LEFT PANEL ══ */
+    .left-panel { flex: 1; min-width: 0; }
+
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      color: #000;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: #757575;
+      margin-bottom: 20px;
+    }
+
+    .upload-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 18px 20px 22px;
+    }
+
+    .upload-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .upload-header svg { width: 32px; height: 32px; flex-shrink: 0; }
+
+    .upload-header-text .title { font-size: 14px; font-weight: 500; color: #000; }
+    .upload-header-text .subtitle { font-size: 11px; color: #757575; margin-top: 1px; }
+
+    .upload-dropzone {
+      background: rgba(204,204,204,0.1);
+      border: 1.5px dashed rgba(0,0,0,0.28);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 24px 16px 20px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .upload-dropzone.dragover {
+      background: rgba(0,147,148,0.07);
+      border-color: #009394;
+    }
+
+    .camera-icon { color: #009394; width: 38px; height: 38px; }
+
+    .dropzone-title { font-size: 13px; font-weight: 600; color: #000; }
+    .dropzone-hint { font-size: 12px; color: #009394; }
+
+    .add-photo-btn {
+      background: #009394;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      border-radius: 16px;
+      padding: 10px 36px;
+      cursor: pointer;
+      margin-top: 6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .add-photo-btn:hover { background: #007b7c; }
+    .add-photo-btn:active { transform: scale(0.97); }
+    .add-photo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #fileInput { display: none; }
+
+    .photo-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .photo-thumb-wrapper { position: relative; width: 60px; height: 60px; }
+
+    .photo-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+
+    .photo-remove {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    /* ══ RIGHT PANEL ══ */
+    .right-panel {
+      width: 440px;
+      flex-shrink: 0;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 22px 26px 24px;
+    }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 5px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,0.42);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #000;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: #9e9e9e; }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: #009394;
+      box-shadow: 0 0 0 3px rgba(0,147,148,0.12);
+    }
+
+    .form-input.error,
+    .form-select.error,
+    .form-textarea.error { border-color: #e53935; }
+
+    .error-msg {
+      font-size: 11px;
+      color: #e53935;
+      margin-top: 3px;
+      display: none;
+    }
+
+    .form-group.has-error .error-msg { display: block; }
+
+    .select-wrapper { position: relative; }
+
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 44px;
+      cursor: pointer;
+      color: #9e9e9e;
+    }
+
+    .form-select.has-value { color: #000; }
+
+    .select-arrow {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #555;
+    }
+
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    /* Phone */
+    .phone-row { display: flex; gap: 8px; }
+
+    .phone-prefix {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid rgba(0,0,0,0.42);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      background: #fff;
+      min-width: 85px;
+      user-select: none;
+      transition: border-color 0.2s;
+    }
+
+    .phone-prefix:hover { border-color: #009394; }
+
+    .phone-number-input { flex: 1; }
+
+    .phone-number-input input {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,0.42);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #000;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .phone-number-input input::placeholder {
+      color: #bbb;
+      letter-spacing: 3px;
+      font-size: 12px;
+    }
+
+    .phone-number-input input:focus {
+      border-color: #009394;
+      box-shadow: 0 0 0 3px rgba(0,147,148,0.12);
+    }
+
+    .phone-number-input input.error { border-color: #e53935; }
+
+    /* Buttons */
+    .action-row { display: flex; gap: 10px; margin-top: 10px; }
+
+    .btn-post {
+      flex: 1.6;
+      background: #009394;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-post:hover { background: #007b7c; }
+    .btn-post:active { transform: scale(0.98); }
+
+    .btn-cancel {
+      flex: 1;
+      background: #fff;
+      color: #000;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1.5px solid rgba(0,0,0,0.42);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-cancel:hover { background: #f5f5f5; border-color: #000; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #009394;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border-radius: 40px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error-toast { background: #e53935; }
+
+    /* Responsive */
+    @media (max-width: 920px) {
+      .page-wrapper { flex-direction: column; }
+      .right-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ══ LEFT ══ -->
+  <div class="left-panel">
+    <h1 class="page-title">Offer an item</h1>
+    <p class="page-subtitle">Share what you don't need and help someone else.</p>
+
+    <div class="upload-card">
+      <div class="upload-header">
+        <svg viewBox="0 0 44 44" fill="none">
+          <rect x="2" y="9" width="40" height="28" rx="4" stroke="#000" stroke-width="2.5" fill="none"/>
+          <circle cx="22" cy="23" r="7" stroke="#000" stroke-width="2.5" fill="none"/>
+          <rect x="15" y="5" width="14" height="6" rx="2" fill="#000"/>
+        </svg>
+        <div class="upload-header-text">
+          <div class="title">Upload item photos</div>
+          <div class="subtitle">Post your item's picture here</div>
+        </div>
+      </div>
+
+      <div class="upload-dropzone" id="dropzone">
+        <svg class="camera-icon" viewBox="0 0 54 54" fill="none">
+          <path d="M20 10l3.5-5h7L34 10h8a4 4 0 014 4v26a4 4 0 01-4 4H10a4 4 0 01-4-4V14a4 4 0 014-4h10z"
+                stroke="#009394" stroke-width="3" fill="none" stroke-linejoin="round"/>
+          <circle cx="27" cy="27" r="8" stroke="#009394" stroke-width="3" fill="none"/>
+          <circle cx="27" cy="27" r="3" fill="#009394"/>
+        </svg>
+        <div class="dropzone-title">Upload item photos</div>
+        <div class="dropzone-hint" id="dropzoneHint">You can upload up to 5 photos</div>
+        <button class="add-photo-btn" id="addPhotoBtn" type="button">Add photo</button>
+        <input type="file" id="fileInput" accept="image/*" multiple />
+      </div>
+
+      <div class="photo-previews" id="photoPreviews"></div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT ══ -->
+  <div class="right-panel">
+    <form id="offerForm" novalidate>
+
+      <div class="form-group" id="group-name">
+        <label class="form-label" for="itemName">Item Name</label>
+        <input class="form-input" type="text" id="itemName" placeholder="Enter item name" />
+        <div class="error-msg">Please enter the item name.</div>
+      </div>
+
+      <div class="form-group" id="group-category">
+        <label class="form-label" for="category">Select Category</label>
+        <div class="select-wrapper">
+          <select class="form-select" id="category">
+            <option value="" disabled selected hidden>Category</option>
+            <option value="clothing">Clothing</option>
+            <option value="furniture">Furniture</option>
+            <option value="electronics">Electronics</option>
+            <option value="books">Books</option>
+            <option value="toys">Toys</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="sports">Sports</option>
+            <option value="other">Other</option>
+          </select>
+          <svg class="select-arrow" width="16" height="10" viewBox="0 0 16 10" fill="none">
+            <path d="M1 1l7 7 7-7" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="error-msg">Please select a category.</div>
+      </div>
+
+      <!-- Other category input -->
+      <div class="form-group" id="group-other-category" style="display:none; margin-top:-4px;">
+        <label class="form-label" for="otherCategory">Specify category</label>
+        <input class="form-input" type="text" id="otherCategory" placeholder="e.g. Musical instruments, Garden tools…" />
+        <div class="error-msg">Please specify the category.</div>
+      </div>
+
+      <div class="form-group" id="group-description">
+        <label class="form-label" for="description">Description</label>
+        <textarea class="form-textarea" id="description" placeholder="Describe the item , condition, size, etc."></textarea>
+        <div class="error-msg">Please add a description.</div>
+      </div>
+
+      <div class="form-group" id="group-location">
+        <label class="form-label" for="location">City / Area</label>
+        <div class="select-wrapper">
+          <select class="form-select" id="location">
+            <option value="" disabled selected hidden>Select location</option>
+            <option value="01">01 - Adrar</option>
+            <option value="02">02 - Chlef</option>
+            <option value="03">03 - Laghouat</option>
+            <option value="04">04 - Oum El Bouaghi</option>
+            <option value="05">05 - Batna</option>
+            <option value="06">06 - Béjaïa</option>
+            <option value="07">07 - Biskra</option>
+            <option value="08">08 - Béchar</option>
+            <option value="09">09 - Blida</option>
+            <option value="10">10 - Bouira</option>
+            <option value="11">11 - Tamanrasset</option>
+            <option value="12">12 - Tébessa</option>
+            <option value="13">13 - Tlemcen</option>
+            <option value="14">14 - Tiaret</option>
+            <option value="15">15 - Tizi Ouzou</option>
+            <option value="16">16 - Alger</option>
+            <option value="17">17 - Djelfa</option>
+            <option value="18">18 - Jijel</option>
+            <option value="19">19 - Sétif</option>
+            <option value="20">20 - Saïda</option>
+            <option value="21">21 - Skikda</option>
+            <option value="22">22 - Sidi Bel Abbès</option>
+            <option value="23">23 - Annaba</option>
+            <option value="24">24 - Guelma</option>
+            <option value="25">25 - Constantine</option>
+            <option value="26">26 - Médéa</option>
+            <option value="27">27 - Mostaganem</option>
+            <option value="28">28 - M'Sila</option>
+            <option value="29">29 - Mascara</option>
+            <option value="30">30 - Ouargla</option>
+            <option value="31">31 - Oran</option>
+            <option value="32">32 - El Bayadh</option>
+            <option value="33">33 - Illizi</option>
+            <option value="34">34 - Bordj Bou Arréridj</option>
+            <option value="35">35 - Boumerdès</option>
+            <option value="36">36 - El Tarf</option>
+            <option value="37">37 - Tindouf</option>
+            <option value="38">38 - Tissemsilt</option>
+            <option value="39">39 - El Oued</option>
+            <option value="40">40 - Khenchela</option>
+            <option value="41">41 - Souk Ahras</option>
+            <option value="42">42 - Tipaza</option>
+            <option value="43">43 - Mila</option>
+            <option value="44">44 - Aïn Defla</option>
+            <option value="45">45 - Naâma</option>
+            <option value="46">46 - Aïn Témouchent</option>
+            <option value="47">47 - Ghardaïa</option>
+            <option value="48">48 - Relizane</option>
+            <option value="49">49 - Timimoun</option>
+            <option value="50">50 - Bordj Badji Mokhtar</option>
+            <option value="51">51 - Ouled Djellal</option>
+            <option value="52">52 - Béni Abbès</option>
+            <option value="53">53 - In Salah</option>
+            <option value="54">54 - In Guezzam</option>
+            <option value="55">55 - Touggourt</option>
+            <option value="56">56 - Djanet</option>
+            <option value="57">57 - El M'Ghair</option>
+            <option value="58">58 - El Meniaa</option>
+          </select>
+          <svg class="select-arrow" width="16" height="10" viewBox="0 0 16 10" fill="none">
+            <path d="M1 1l7 7 7-7" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="error-msg">Please select a city or area.</div>
+      </div>
+
+      <div class="form-group" id="group-phone">
+        <label class="form-label">Phone Number</label>
+        <div class="phone-row">
+          <div class="phone-prefix">
+            <span id="prefixText">+213</span>
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+              <path d="M1 1l5 5 5-5" stroke="#555" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="phone-number-input">
+            <input type="tel" id="phoneNumber" placeholder="×× ×× ×× ××" maxlength="11" />
+          </div>
+        </div>
+        <div class="error-msg">Please enter a valid phone number.</div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-post" type="submit">Post Item</button>
+        <button class="btn-cancel" type="button" id="cancelBtn">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── PHOTO UPLOAD ── */
+  const MAX_PHOTOS = 5;
+  let photos = [];
+
+  const fileInput   = document.getElementById('fileInput');
+  const addPhotoBtn = document.getElementById('addPhotoBtn');
+  const dropzone    = document.getElementById('dropzone');
+  const previews    = document.getElementById('photoPreviews');
+  const hint        = document.getElementById('dropzoneHint');
+
+  addPhotoBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', () => { handleFiles(fileInput.files); fileInput.value = ''; });
+
+  function handleFiles(fileList) {
+    const remaining = MAX_PHOTOS - photos.length;
+    if (remaining <= 0) { showToast('Maximum 5 photos allowed.', true); return; }
+    const toAdd = Array.from(fileList).filter(f => f.type.startsWith('image/')).slice(0, remaining);
+    toAdd.forEach(file => photos.push({ file, url: URL.createObjectURL(file) }));
+    if (fileList.length > toAdd.length && photos.length === MAX_PHOTOS) {
+      showToast('Only ' + remaining + ' photo(s) added — limit reached.', true);
+    }
+    renderPreviews();
+  }
+
+  function renderPreviews() {
+    previews.innerHTML = '';
+    photos.forEach((p, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'photo-thumb-wrapper';
+
+      const img = document.createElement('img');
+      img.src = p.url;
+      img.className = 'photo-thumb';
+      img.alt = 'Preview';
+
+      const btn = document.createElement('button');
+      btn.className = 'photo-remove';
+      btn.type = 'button';
+      btn.textContent = '×';
+      btn.addEventListener('click', () => { URL.revokeObjectURL(photos[i].url); photos.splice(i, 1); renderPreviews(); });
+
+      wrap.appendChild(img);
+      wrap.appendChild(btn);
+      previews.appendChild(wrap);
+    });
+
+    const left = MAX_PHOTOS - photos.length;
+    hint.textContent = left > 0 ? 'You can upload up to ' + left + ' more photo' + (left > 1 ? 's' : '') : 'Maximum photos reached';
+    hint.style.color = left > 0 ? '#009394' : '#e53935';
+    addPhotoBtn.disabled = left === 0;
+  }
+
+  /* ── SELECT COLOR ── */
+  document.querySelectorAll('.form-select').forEach(sel => {
+    sel.addEventListener('change', () => sel.classList.add('has-value'));
+  });
+
+  /* ── OTHER CATEGORY ── */
+  const categorySelect = document.getElementById('category');
+  const otherGroup     = document.getElementById('group-other-category');
+  const otherInput     = document.getElementById('otherCategory');
+
+  categorySelect.addEventListener('change', () => {
+    const isOther = categorySelect.value === 'other';
+    otherGroup.style.display = isOther ? 'block' : 'none';
+    if (isOther) {
+      setTimeout(() => otherInput.focus(), 50);
+    } else {
+      otherInput.value = '';
+      otherGroup.classList.remove('has-error');
+      otherInput.classList.remove('error');
+    }
+  });
+
+  /* ── PHONE FORMAT ── */
+  const phoneInput = document.getElementById('phoneNumber');
+  phoneInput.addEventListener('input', () => {
+    let digits = phoneInput.value.replace(/\D/g, '').slice(0, 8);
+    const parts = [];
+    for (let i = 0; i < digits.length; i += 2) parts.push(digits.slice(i, i + 2));
+    phoneInput.value = parts.join(' ');
+  });
+
+  /* ── VALIDATION ── */
+  const fields = [
+    { id: 'itemName',    group: 'group-name',        ok: v => v.trim().length > 0 },
+    { id: 'category',   group: 'group-category',    ok: v => v !== '' },
+    { id: 'description',group: 'group-description', ok: v => v.trim().length > 0 },
+    { id: 'location',   group: 'group-location',    ok: v => v !== '' },
+    { id: 'phoneNumber',group: 'group-phone',        ok: v => v.replace(/\D/g, '').length >= 8 },
+  ];
+
+  function validateForm() {
+    let valid = true;
+    fields.forEach(({ id, group, ok }) => {
+      const el  = document.getElementById(id);
+      const grp = document.getElementById(group);
+      const pass = ok(el.value);
+      grp.classList.toggle('has-error', !pass);
+      el.classList.toggle('error', !pass);
+      if (!pass) valid = false;
+
+      const clear = () => { grp.classList.remove('has-error'); el.classList.remove('error'); };
+      el.addEventListener('input',  clear, { once: true });
+      el.addEventListener('change', clear, { once: true });
+    });
+
+    // Validate "other category" field if visible
+    if (otherGroup.style.display !== 'none') {
+      const hasOther = otherInput.value.trim().length > 0;
+      otherGroup.classList.toggle('has-error', !hasOther);
+      otherInput.classList.toggle('error', !hasOther);
+      if (!hasOther) valid = false;
+      otherInput.addEventListener('input', () => {
+        otherGroup.classList.remove('has-error');
+        otherInput.classList.remove('error');
+      }, { once: true });
+    }
+
+    return valid;
+  }
+
+  document.getElementById('offerForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!validateForm()) { showToast('Please fill in all required fields.', true); return; }
+    showToast('✓ Item posted successfully!');
+    setTimeout(() => {
+      document.getElementById('offerForm').reset();
+      photos.forEach(p => URL.revokeObjectURL(p.url));
+      photos = [];
+      renderPreviews();
+      document.querySelectorAll('.form-select').forEach(s => s.classList.remove('has-value'));
+      otherGroup.style.display = 'none'; otherInput.value = '';
+    }, 1200);
+  });
+
+  /* ── CANCEL ── */
+  document.getElementById('cancelBtn').addEventListener('click', () => {
+    if (!confirm('Cancel? Your changes will be lost.')) return;
+    document.getElementById('offerForm').reset();
+    photos.forEach(p => URL.revokeObjectURL(p.url));
+    photos = [];
+    renderPreviews();
+    document.querySelectorAll('.form-select').forEach(s => s.classList.remove('has-value'));
+    document.querySelectorAll('.form-group.has-error').forEach(g => g.classList.remove('has-error'));
+  });
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (isError ? ' error-toast' : '') + ' show';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
