@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAQ / How It Works – Tawfir</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      color: #000;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 20px 48px;
+    }
+
+    /* ── Title ── */
+    .title {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      color: #000;
+      text-align: center;
+      margin-bottom: 28px;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Search bar ── */
+    .search-wrap {
+      width: 100%;
+      max-width: 680px;
+      position: relative;
+      margin-bottom: 36px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      color: #9e9e9e;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #f2f2f2;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 20px 16px 54px;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(14px, 1.2vw, 18px);
+      font-weight: 400;
+      color: #333;
+      outline: none;
+      transition: box-shadow 0.25s;
+    }
+
+    .search-input::placeholder {
+      color: #9e9e9e;
+    }
+
+    .search-input:focus {
+      box-shadow: 0 0 0 2px #009394;
+    }
+
+    /* ── FAQ list ── */
+    .faq-list {
+      width: 100%;
+      max-width: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── FAQ item ── */
+    .faq-item {
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: box-shadow 0.25s;
+    }
+
+    .faq-item:hover {
+      box-shadow: 0 4px 16px rgba(0,147,148,0.1);
+    }
+
+    /* Question row */
+    .faq-question {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 24px;
+      background: #f7f7f7;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .faq-question:hover {
+      background: #f0f0f0;
+    }
+
+    /* Teal triangle indicator */
+    .faq-indicator {
+      width: 0;
+      height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 13px solid #009394;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    /* When collapsed, rotate triangle to point right */
+    .faq-item.collapsed .faq-indicator {
+      transform: rotate(-90deg);
+    }
+
+    .faq-question-text {
+      flex: 1;
+      font-size: clamp(14px, 1.3vw, 20px);
+      font-weight: 600;
+      color: #000;
+    }
+
+    /* Chevron on the right */
+    .faq-chevron {
+      width: 22px;
+      height: 22px;
+      color: #333;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.collapsed .faq-chevron {
+      transform: rotate(-90deg);
+    }
+
+    /* Answer panel */
+    .faq-answer {
+      max-height: 300px;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      background: #fff;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .faq-item.collapsed .faq-answer {
+      max-height: 0;
+      border-top: none;
+    }
+
+    .faq-answer-inner {
+      padding: 18px 24px 18px 56px;
+      font-size: clamp(13px, 1.1vw, 17px);
+      color: #9e9e9e;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    /* No results */
+    .no-results {
+      text-align: center;
+      color: #9e9e9e;
+      font-size: 16px;
+      padding: 20px;
+      display: none;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    /* ── Footer CTA ── */
+    .footer-cta {
+      margin-top: 40px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .footer-cta p {
+      font-size: clamp(15px, 1.3vw, 20px);
+      font-weight: 600;
+      color: #000;
+    }
+
+    .btn-contact {
+      background: #009394;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 60px;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(15px, 1.2vw, 20px);
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,147,148,0.3);
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-contact:hover {
+      background: #007b7c;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,147,148,0.4);
+    }
+
+    .btn-contact:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Title -->
+  <h1 class="title">FAQ / HOW IT WORKS</h1>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      type="text"
+      id="searchInput"
+      class="search-input"
+      placeholder="Search Questions..."
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- FAQ items -->
+  <div class="faq-list" id="faqList">
+
+    <div class="faq-item" data-question="How can I create an account?">
+      <div class="faq-question">
+        <div class="faq-indicator"></div>
+        <span class="faq-question-text">How can I create an account?</span>
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          You can sign up using your email or Google account.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" data-question="How do I reset my password?">
+      <div class="faq-question">
+        <div class="faq-indicator"></div>
+        <span class="faq-question-text">How do I reset my password?</span>
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Click on "Forgot Password" and follow the instruction.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" data-question="How long does delivery take?">
+      <div class="faq-question">
+        <div class="faq-indicator"></div>
+        <span class="faq-question-text">How long does delivery take?</span>
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Delivery usually takes between 2 to 5 business days depending on your location.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item" data-question="Is my personal information secure?">
+      <div class="faq-question">
+        <div class="faq-indicator"></div>
+        <span class="faq-question-text">Is my personal information secure?</span>
+        <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Yes, we use secure encryption and protect your data. Your personal information will never be shared with third parties without your permission.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- No results message -->
+  <p class="no-results" id="noResults">No questions found for "<span id="searchTerm"></span>".</p>
+
+  <!-- Footer CTA -->
+  <div class="footer-cta">
+    <p>Still have questions?</p>
+    <a href="/contact us/contact_us.html" class="btn-contact">Contact Us</a>
+  </div>
+
+</div>
+
+<script>
+  /* ── Accordion ── */
+  const faqItems = document.querySelectorAll('.faq-item');
+
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+
+    // Start all open (matching design)
+    // To start collapsed by default, add: item.classList.add('collapsed');
+
+    question.addEventListener('click', () => {
+      const isCollapsed = item.classList.contains('collapsed');
+
+      // Close all others
+      faqItems.forEach(i => i.classList.add('collapsed'));
+
+      // Toggle current
+      if (isCollapsed) {
+        item.classList.remove('collapsed');
+      }
+    });
+  });
+
+  /* ── Search / Filter ── */
+  const searchInput = document.getElementById('searchInput');
+  const noResults   = document.getElementById('noResults');
+  const searchTerm  = document.getElementById('searchTerm');
+
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    faqItems.forEach(item => {
+      const question = item.dataset.question.toLowerCase();
+      const answer   = item.querySelector('.faq-answer-inner').textContent.toLowerCase();
+      const matches  = question.includes(query) || answer.includes(query);
+
+      item.style.display = matches ? '' : 'none';
+      if (matches) visibleCount++;
+
+      // Auto-expand matched items when searching
+      if (query && matches) {
+        item.classList.remove('collapsed');
+      }
+    });
+
+    // Show/hide no results
+    if (visibleCount === 0 && query) {
+      searchTerm.textContent = searchInput.value.trim();
+      noResults.classList.add('visible');
+    } else {
+      noResults.classList.remove('visible');
+    }
+  });
+</script>
+
+</body>
+</html>
