@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – Tawfir</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&family=Roboto:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 16px 20px;
+    }
+
+    /* ── Background ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+    .bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── Container ── */
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Header ── */
+    .header h1 {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      color: #010101;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-family: 'Roboto', sans-serif;
+      font-size: clamp(13px, 1.1vw, 16px);
+      color: #757575;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 24px;
+      padding: 24px 32px 20px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ── Inputs ── */
+    .input-group { position: relative; }
+
+    .input-field {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      padding: 13px 20px;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(14px, 1.1vw, 17px);
+      font-weight: 400;
+      color: #333;
+      outline: none;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+
+    .input-field::placeholder { color: #757575; }
+
+    .input-field:focus {
+      border-color: #009394;
+      background: rgba(255, 255, 255, 0.75);
+      box-shadow: 0 4px 14px rgba(0, 147, 148, 0.2);
+    }
+
+    .input-field.error {
+      border-color: #e53e3e;
+      box-shadow: 0 3px 8px rgba(229, 62, 62, 0.15);
+    }
+
+    /* Eye toggle */
+    .eye-btn {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .eye-btn img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .eye-btn:hover img { opacity: 1; }
+
+    /* Error message */
+    .error-msg {
+      font-size: 11px;
+      color: #e53e3e;
+      padding-left: 14px;
+      margin-top: -4px;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+
+    /* Forget password */
+    .forget-link {
+      color: #009394;
+      font-size: clamp(12px, 0.9vw, 15px);
+      font-weight: 400;
+      text-decoration: none;
+      padding-left: 6px;
+      margin-top: -2px;
+      width: fit-content;
+      transition: opacity 0.2s;
+    }
+    .forget-link:hover { opacity: 0.75; text-decoration: underline; }
+
+    /* Sign In button */
+    .btn-signin {
+      width: 100%;
+      background: #009394;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(15px, 1.2vw, 19px);
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 147, 148, 0.35);
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      margin-top: 2px;
+    }
+    .btn-signin:hover {
+      background: #007b7c;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 147, 148, 0.4);
+    }
+    .btn-signin.loading {
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    /* OR divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 2px 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .divider span {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(13px, 1vw, 16px);
+      font-weight: 500;
+      color: #757575;
+    }
+
+    /* Google button */
+    .btn-google {
+      width: fit-content;
+      align-self: center;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      padding: 11px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(14px, 1.1vw, 17px);
+      font-weight: 500;
+      color: #010101;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.25s, transform 0.2s;
+      text-decoration: none;
+    }
+    .btn-google:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+    .btn-google img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    /* Sign up link */
+    .signup-text {
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(12px, 0.9vw, 15px);
+      font-weight: 500;
+      color: #757575;
+    }
+    .signup-text a {
+      color: #009394;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .signup-text a:hover { opacity: 0.75; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg">
+    <img src="../sign in/images/rectangle-590.png" alt="" />
+  </div>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>Sign In</h1>
+      <p>Welcome Back please Log in to your account</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+
+      <!-- Full name -->
+      <div class="input-group">
+        <input type="text" id="username" class="input-field" placeholder="Full name" autocomplete="username" />
+        <p class="error-msg" id="nameErr">Please enter your name.</p>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <input type="password" id="password" class="input-field" placeholder="Password" autocomplete="current-password" style="padding-right: 56px;" />
+        <button class="eye-btn" id="eyeBtn" type="button" aria-label="Toggle password visibility">
+          <img src="../sign in/images/eye0.png" alt="Show password" id="eyeIcon" />
+        </button>
+        <p class="error-msg" id="passErr">Please enter your password.</p>
+      </div>
+
+      <!-- Forget password -->
+      <a href="../forgot password/forgot_password.html" class="forget-link">Forget Password</a>
+
+      <!-- Sign In button -->
+      <button class="btn-signin" id="signinBtn" type="button" onclick="handleSignIn()">
+        Sign in
+      </button>
+
+      <!-- OR -->
+      <div class="divider"><span>OR</span></div>
+
+      <!-- Google -->
+      <a href="#" class="btn-google">
+        <img src="../sign in/images/google0.png" alt="Google" />
+        Sign In with Google
+      </a>
+
+      <!-- Sign up link -->
+      <p class="signup-text">
+        Don't have an account? <a href="../sign up/sign_up.html">Sign up</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── Password toggle ── */
+    document.getElementById('eyeBtn').addEventListener('click', () => {
+      const input = document.getElementById('password');
+      const icon  = document.getElementById('eyeIcon');
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      icon.style.opacity = isHidden ? '1' : '0.5';
+    });
+
+    /* ── Helpers ── */
+    function showErr(inputId, errId) {
+      document.getElementById(inputId).classList.add('error');
+      document.getElementById(errId).classList.add('visible');
+    }
+    function clearErr(inputId, errId) {
+      document.getElementById(inputId).classList.remove('error');
+      document.getElementById(errId).classList.remove('visible');
+    }
+
+    /* ── Live validation ── */
+    document.getElementById('username').addEventListener('input', function() {
+      if (this.value.trim()) clearErr('username', 'nameErr');
+    });
+    document.getElementById('password').addEventListener('input', function() {
+      if (this.value) clearErr('password', 'passErr');
+    });
+
+    /* ── Sign In handler ── */
+    function handleSignIn() {
+      let valid = true;
+
+      const name = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+
+      if (!name) { showErr('username', 'nameErr'); valid = false; }
+      else clearErr('username', 'nameErr');
+
+      if (!pass) { showErr('password', 'passErr'); valid = false; }
+      else clearErr('password', 'passErr');
+
+      if (!valid) return;
+
+      const btn = document.getElementById('signinBtn');
+      btn.classList.add('loading');
+      btn.textContent = 'Signing in…';
+
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.textContent = 'Sign in';
+        window.location.href = '../home/index.html';
+      }, 1500);
+    }
+
+    /* ── Enter key ── */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSignIn();
+    });
+  </script>
+
+</body>
+</html>

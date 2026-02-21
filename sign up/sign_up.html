@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up – Tawfir</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500&family=Roboto:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 16px 20px;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header h1 {
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 700;
+  color: #010101;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.header p {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(13px, 1.1vw, 16px);
+  color: #757575;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 24px;
+  padding: 24px 32px 20px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-field {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 13px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(14px, 1.1vw, 17px);
+  font-weight: 400;
+  color: #333;
+  outline: none;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+
+.input-field::placeholder { color: #757575; }
+
+.input-field:focus {
+  border-color: #009394;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 4px 14px rgba(0, 147, 148, 0.2);
+}
+
+.input-field.error {
+  border-color: #e53e3e;
+  box-shadow: 0 3px 8px rgba(229, 62, 62, 0.15);
+}
+
+.eye-btn {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.eye-btn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.eye-btn:hover img { opacity: 1; }
+
+.error-msg {
+  font-size: 11px;
+  color: #e53e3e;
+  padding-left: 14px;
+  margin-top: -4px;
+  display: none;
+}
+.error-msg.visible { display: block; }
+
+.forget-link {
+  color: #009394;
+  font-size: clamp(12px, 0.9vw, 15px);
+  font-weight: 400;
+  text-decoration: none;
+  padding-left: 6px;
+  margin-top: -2px;
+  width: fit-content;
+  transition: opacity 0.2s;
+}
+.forget-link:hover { opacity: 0.75; text-decoration: underline; }
+
+.btn-create {
+  width: 100%;
+  background: #009394;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 14px;
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(15px, 1.2vw, 19px);
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 147, 148, 0.35);
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  margin-top: 2px;
+}
+
+.btn-create:hover {
+  background: #007b7c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 147, 148, 0.4);
+}
+
+.btn-create.loading {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 2px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.divider span {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(13px, 1vw, 16px);
+  font-weight: 500;
+  color: #757575;
+}
+
+.btn-google {
+  width: fit-content;
+  align-self: center;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 11px 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(14px, 1.1vw, 17px);
+  font-weight: 500;
+  color: #010101;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.25s, transform 0.2s;
+  text-decoration: none;
+}
+
+.btn-google:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.btn-google img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.signin-text {
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(12px, 0.9vw, 15px);
+  font-weight: 500;
+  color: #757575;
+}
+
+.signin-text a {
+  color: #009394;
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.signin-text a:hover { opacity: 0.75; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="bg">
+    <img src="../sign up/images/rectangle-580.png" alt="" />
+  </div>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <h1>Sign Up</h1>
+      <p>Enter your personal data to create your account</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+
+      <!-- Full name -->
+      <div class="input-group">
+        <input type="text" id="fullname" class="input-field" placeholder="Full name" autocomplete="name" />
+        <p class="error-msg" id="nameErr">Please enter your full name.</p>
+      </div>
+
+      <!-- Email -->
+      <div class="input-group">
+        <input type="email" id="email" class="input-field" placeholder="Email" autocomplete="email" />
+        <p class="error-msg" id="emailErr">Please enter a valid email address.</p>
+      </div>
+
+      <!-- Password -->
+      <div class="input-group">
+        <input type="password" id="password" class="input-field" placeholder="Password" autocomplete="new-password" style="padding-right: 62px;" />
+        <button class="eye-btn" id="eyeBtn" type="button" aria-label="Toggle password visibility">
+          <img src="../sign up/images/eye0.png" alt="Show password" id="eyeIcon" />
+        </button>
+        <p class="error-msg" id="passErr">Password must be at least 8 characters.</p>
+      </div>
+
+      <!-- Forget password -->
+      <a href="../forgot password/forgot_password.html" class="forget-link">Forget Password</a>
+
+      <!-- Create Account -->
+      <button class="btn-create" id="createBtn" type="button" onclick="handleSignUp()">
+        Create Account
+      </button>
+
+      <!-- OR -->
+      <div class="divider"><span>OR</span></div>
+
+      <!-- Google -->
+      <a href="#" class="btn-google">
+        <img src="../sign up/images/google0.png" alt="Google" />
+        Sign Up with Google
+      </a>
+
+      <!-- Sign in -->
+      <p class="signin-text">
+        Already have an account? <a href="../sign in/sign_in.html">Sign in</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    /* ── Password visibility toggle ── */
+    const eyeBtn  = document.getElementById('eyeBtn');
+    const passInput = document.getElementById('password');
+
+    eyeBtn.addEventListener('click', () => {
+      const isHidden = passInput.type === 'password';
+      passInput.type = isHidden ? 'text' : 'password';
+      eyeBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+      // Tint the eye when visible
+      document.getElementById('eyeIcon').style.opacity = isHidden ? '1' : '0.5';
+    });
+
+    /* ── Validation helpers ── */
+    function isValidEmail(val) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+    }
+
+    function showErr(inputId, errId) {
+      document.getElementById(inputId).classList.add('error');
+      document.getElementById(errId).classList.add('visible');
+    }
+
+    function clearErr(inputId, errId) {
+      document.getElementById(inputId).classList.remove('error');
+      document.getElementById(errId).classList.remove('visible');
+    }
+
+    /* ── Live validation ── */
+    document.getElementById('fullname').addEventListener('input', function() {
+      if (this.value.trim()) clearErr('fullname', 'nameErr');
+    });
+
+    document.getElementById('email').addEventListener('input', function() {
+      if (isValidEmail(this.value)) clearErr('email', 'emailErr');
+    });
+
+    document.getElementById('password').addEventListener('input', function() {
+      if (this.value.length >= 8) clearErr('password', 'passErr');
+    });
+
+    /* ── Sign Up handler ── */
+    function handleSignUp() {
+      let valid = true;
+
+      const name  = document.getElementById('fullname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('password').value;
+
+      if (!name) { showErr('fullname', 'nameErr'); valid = false; }
+      else clearErr('fullname', 'nameErr');
+
+      if (!isValidEmail(email)) { showErr('email', 'emailErr'); valid = false; }
+      else clearErr('email', 'emailErr');
+
+      if (pass.length < 8) { showErr('password', 'passErr'); valid = false; }
+      else clearErr('password', 'passErr');
+
+      if (!valid) return;
+
+      /* Simulate account creation */
+      const btn = document.getElementById('createBtn');
+      btn.classList.add('loading');
+      btn.textContent = 'Creating account…';
+
+      setTimeout(() => {
+        btn.classList.remove('loading');
+        btn.textContent = 'Create Account';
+        // Redirect to home or sign in
+        window.location.href = '../home/index.html';
+      }, 1800);
+    }
+
+    /* ── Submit on Enter ── */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSignUp();
+    });
+  </script>
+
+</body>
+</html>
