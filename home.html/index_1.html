@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tawfir – Give your items a second life</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #009394;
+      --dark: #2d3748;
+      --gray: #9e9e9e;
+      --light-bg: #f5f5f5;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: #000;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════
+       NAVBAR
+    ══════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      padding: 0 5%;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #000;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .logo span { color: var(--teal); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: #000;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--teal); }
+
+    .nav-links .dropdown { position: relative; }
+    .nav-links .dropdown > a::after { content: ' ▾'; font-size: 11px; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      min-width: 160px;
+      padding: 8px 0;
+      z-index: 200;
+    }
+    .dropdown:hover .dropdown-menu { display: block; }
+    .dropdown-menu a {
+      display: block;
+      padding: 10px 18px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .dropdown-menu a:hover { background: #f5f5f5; color: var(--teal); }
+
+    .btn-signup {
+      background: var(--teal);
+      color: #fff !important;
+      padding: 8px 22px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-signup:hover { background: #007b7c; transform: translateY(-1px); }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    .hero {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.85) 100%);
+    }
+
+    .hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .hero-tagline {
+      font-size: clamp(15px, 2vw, 22px);
+      color: #333;
+      font-weight: 500;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-find {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 14px 32px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,147,148,0.3);
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .btn-find:hover { background: #007b7c; transform: translateY(-2px); }
+
+    .btn-offer {
+      background: var(--dark);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 14px 32px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .btn-offer:hover { background: #1a202c; transform: translateY(-2px); }
+
+    /* Search bar */
+    .hero-search {
+      display: flex;
+      width: 100%;
+      max-width: 700px;
+      background: #fff;
+      border-radius: 50px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .hero-search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 14px 20px 14px 50px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      color: #333;
+      background: url('search0.png') no-repeat 14px center / 24px;
+    }
+    .hero-search input::placeholder { color: var(--gray); }
+
+    .hero-search button {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .hero-search button:hover { background: #007b7c; }
+
+    /* ══════════════════════════════
+       CATEGORIES CAROUSEL
+    ══════════════════════════════ */
+    .section { padding: 48px 5%; }
+    .section-sm { padding: 32px 5%; }
+
+    .categories-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 20px;
+      overflow: hidden;
+      scroll-behavior: smooth;
+      flex: 1;
+    }
+
+    .cat-card {
+      flex: 1 1 0;
+      min-width: 0;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+      aspect-ratio: 1;
+    }
+    .cat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+
+    .cat-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cat-label {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      padding: 24px 8px 10px;
+    }
+
+    .carousel-btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      width: 42px; height: 42px;
+      font-size: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .carousel-btn:hover { background: var(--teal); color: #fff; box-shadow: 0 4px 12px rgba(0,147,148,0.3); }
+
+    /* ══════════════════════════════
+       LATEST ITEMS
+    ══════════════════════════════ */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: clamp(20px, 2.5vw, 30px);
+      font-weight: 700;
+    }
+
+    .see-more-btn {
+      background: none;
+      border: 1.5px solid #333;
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .see-more-btn:hover { border-color: var(--teal); color: var(--teal); }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .item-card {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      background: #fff;
+      border: 1px solid #eee;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      position: relative;
+    }
+    .item-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.13); }
+
+    .item-card img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+    }
+
+    .item-info {
+      padding: 12px 14px;
+    }
+
+    .item-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .item-location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    .item-location img { width: 14px; height: 14px; object-fit: contain; }
+
+    .btn-see-more-sm {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 5px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+    .btn-see-more-sm:hover { background: #007b7c; }
+
+    .item-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+    }
+
+    .heart-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .heart-btn:hover { background: #fff; transform: scale(1.1); }
+    .heart-btn img { width: 18px; height: 18px; object-fit: contain; }
+
+    /* ══════════════════════════════
+       ABOUT
+    ══════════════════════════════ */
+    .about-section {
+      padding: 60px 5%;
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      background: #fafafa;
+      flex-wrap: wrap;
+    }
+
+    .about-left { flex: 1; min-width: 260px; }
+
+    .about-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .about-title span { color: var(--teal); }
+
+    .about-subtitle {
+      font-size: clamp(14px, 1.5vw, 20px);
+      color: #555;
+      font-weight: 500;
+    }
+
+    .about-right {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      gap: -20px;
+    }
+
+    .about-imgs {
+      display: flex;
+      gap: 16px;
+    }
+
+    .about-imgs img {
+      width: 48%;
+      border-radius: 20px;
+      object-fit: cover;
+      aspect-ratio: 3/4;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    /* ══════════════════════════════
+       INTRODUCTION
+    ══════════════════════════════ */
+    .intro-section {
+      padding: 60px 5%;
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .intro-img {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      flex-shrink: 0;
+    }
+
+    .intro-text { flex: 1; min-width: 260px; }
+
+    .intro-title {
+      font-size: clamp(20px, 2.5vw, 30px);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .intro-title span { color: var(--teal); }
+
+    .intro-desc {
+      font-size: clamp(14px, 1.3vw, 18px);
+      color: #555;
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════
+       MISSION PROCESS
+    ══════════════════════════════ */
+    .mission-section {
+      background: var(--light-bg);
+      padding: 60px 5%;
+      text-align: center;
+    }
+
+    .mission-title {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      margin-bottom: 48px;
+    }
+    .mission-title span { color: var(--teal); }
+
+    .mission-steps {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .mission-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 160px;
+      position: relative;
+    }
+
+    .mission-step::after {
+      content: '';
+      position: absolute;
+      top: 35px;
+      left: calc(50% + 40px);
+      width: calc(100% - 80px);
+      height: 2px;
+      background: #ccc;
+      z-index: 0;
+    }
+    .mission-step:last-child::after { display: none; }
+
+    .step-circle {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      z-index: 1;
+      position: relative;
+    }
+
+    .step-circle img { width: 36px; height: 36px; object-fit: contain; }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* ══════════════════════════════
+       POINTS SYSTEM
+    ══════════════════════════════ */
+    .points-section {
+      padding: 60px 5%;
+      display: flex;
+      gap: 60px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .points-icons { display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+    .points-icons img { width: 80px; height: 80px; object-fit: contain; }
+
+    .points-text { flex: 1; min-width: 260px; }
+
+    .points-title {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .points-title span { color: var(--teal); }
+
+    .points-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .points-list li {
+      font-size: clamp(16px, 1.8vw, 24px);
+      font-weight: 500;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .points-list li::before {
+      content: '';
+      width: 8px; height: 8px;
+      background: var(--teal);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════
+       WHY CHOOSE US
+    ══════════════════════════════ */
+    .why-section {
+      background: var(--light-bg);
+      padding: 60px 5%;
+    }
+
+    .why-header {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .why-title {
+      font-size: clamp(22px, 3vw, 36px);
+      font-weight: 700;
+      min-width: 180px;
+    }
+
+    .why-desc {
+      flex: 1;
+      font-size: clamp(13px, 1.2vw, 16px);
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .why-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .why-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .why-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,147,148,0.12); }
+
+    .why-card img { width: 40px; height: 40px; object-fit: contain; margin-bottom: 12px; }
+
+    .why-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .why-card p {
+      font-size: 13px;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: var(--dark);
+      color: #fff;
+      padding: 48px 5% 24px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand .logo { color: #fff; font-size: 22px; margin-bottom: 10px; display: flex; }
+    .footer-brand p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 16px; }
+
+    .footer-col h5 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .footer-col ul li a {
+      text-decoration: none;
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      transition: color 0.2s;
+    }
+    .footer-col ul li a:hover { color: var(--teal); }
+
+    .social-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .social-row a { transition: transform 0.2s; display: inline-flex; }
+    .social-row a:hover { transform: scale(1.15); }
+    .social-row img { width: 32px; height: 32px; object-fit: contain; }
+
+    .footer-info { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 8px; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .footer-bottom a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+    }
+    .footer-bottom a:hover { color: var(--teal); }
+
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     NAVBAR
+══════════════════════════════ -->
+<nav>
+  <a href="#" class="logo" style="display:flex; align-items:center; gap:4px;">
+  <img src="../home.html/images/group-10.svg" alt="T" style="height: 36px;" />
+  <span style="font-size:26px; font-weight:700; color:#000; font-family:'Poppins',sans-serif;">awfir</span>
+</a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Home</a></li>
+    <li class="dropdown">
+      <a href="#">Categories</a>
+      <div class="dropdown-menu">
+        <a href="#">Furniture</a>
+        <a href="#">Tools</a>
+        <a href="#">Clothes</a>
+        <a href="#">Shoes</a>
+        <a href="#">Electronics</a>
+        <a href="#">Kitchen</a>
+        <a href="#">Sports</a>
+        <a href="#">Toys</a>
+      </div>
+    </li>
+    <li><a href="#">About</a></li>
+    <li><a href="../contact us/contact_us.html">Contact Us</a></li>
+    <li><a href="../sign up/sign_up.html" class="btn-signup">Sign Up</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section class="hero">
+  <img class="hero-img" src="../home.html/images/chat-gpt-image-feb-5-2026-12-55-45-am-10.png" alt="Hero background" />
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-tagline">Give your items a second life, help others for free !</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-find">
+        Find an item <img src="../home.html/images/forward0.png" alt="" style="width:20px;height:20px;object-fit:contain;filter:brightness(10)" />
+      </a>
+      <a href="../offer an item/offer_an_item.html" class="btn-offer">
+        Offer an item <img src="../home.html/images/forward1.png" alt="" style="width:20px;height:20px;object-fit:contain;filter:brightness(10)" />
+      </a>
+    </div>
+    <div class="hero-search">
+      <input type="text" id="heroSearch" placeholder="Search items" />
+      <button onclick="handleSearch()">Search</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     CATEGORIES
+══════════════════════════════ -->
+<section class="section">
+  <div class="categories-wrap">
+    <button class="carousel-btn" id="prevBtn" onclick="scrollCarousel(-1)">&#8249;</button>
+    <div class="carousel-track" id="carouselTrack">
+      <div class="cat-card" onclick="filterByCategory('Furniture')">
+        <img src="../home.html/images/rectangle-430.png" alt="Furniture" />
+        <div class="cat-label">Furniture</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Tools')">
+        <img src="../home.html/images/rectangle-470.png" alt="Tools" />
+        <div class="cat-label">Tools</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Clothes')">
+        <img src="../home.html/images/rectangle-480.png" alt="Clothes" />
+        <div class="cat-label">Clothes</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Shoes')">
+        <img src="../home.html/images/rectangle-490.png" alt="Shoes" />
+        <div class="cat-label">Shoes</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Electronics')">
+        <img src="../home.html/images/apple-i-phone-12-pro-max-features-and-reviews-10.png" alt="Electronics" />
+        <div class="cat-label">Electronic</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Kitchen')">
+        <img src="../home.html/images/k-che-planen-und-gestalten-tipps-ideen-10.png" alt="Kitchen" />
+        <div class="cat-label">Kitchen</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Sports')">
+        <img src="../home.html/images/download-5-10.png" alt="Sports" />
+        <div class="cat-label">Sports</div>
+      </div>
+      <div class="cat-card" onclick="filterByCategory('Toys')">
+        <img src="../home.html/images/baby-toy-10.png" alt="Toys" />
+        <div class="cat-label">Toys</div>
+      </div>
+    </div>
+    <button class="carousel-btn" id="nextBtn" onclick="scrollCarousel(1)">&#8250;</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     LATEST ITEMS
+══════════════════════════════ -->
+<section class="section" style="padding-top:0">
+  <div class="section-header">
+    <h2 class="section-title">Latest items</h2>
+    <button class="see-more-btn">See More <img src="../home.html/images/weui-arrow-outlined0.svg" alt="" style="width:14px" /></button>
+  </div>
+  <div class="items-grid" id="itemsGrid">
+
+    <div class="item-card">
+      <button class="heart-btn"><img src="../home.html/images/heart0.png" alt="Save" /></button>
+      <img src="../home.html/images/lenovo-computers-laptops-parts-genuine-lenovo-170-w-ac-adapter-20-v-45-n-0113-45-n-0114-for-lenovo-thinkpad-w-520-w-530-color-black-size-os-11.png" alt="It ends with us" />
+      <img class="item-badge" src="../home.html/images/stash-save-ribbon0.svg" alt="" />
+      <div class="item-info">
+        <div class="item-name">It ends with us</div>
+        <div class="item-footer">
+          <span class="item-location"><img src="../home.html/images/location0.png" alt="" /> Algiers</span>
+          <button class="btn-see-more-sm"><img src="../home.html/images/plus0.png" alt="" style="width:12px;filter:brightness(10)"> See More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <button class="heart-btn"><img src="../home.html/images/heart1.png" alt="Save" /></button>
+      <img src="../home.html/images/lenovo-computers-laptops-parts-genuine-lenovo-170-w-ac-adapter-20-v-45-n-0113-45-n-0114-for-lenovo-thinkpad-w-520-w-530-color-black-size-os-10.png" alt="Lenovo Charger 170w" />
+      <div class="item-info">
+        <div class="item-name">Lenovo Charger 170w</div>
+        <div class="item-footer">
+          <span class="item-location"><img src="../home.html/images/location1.png" alt="" /> Tipaza</span>
+          <button class="btn-see-more-sm"><img src="../home.html/images/plus1.png" alt="" style="width:12px;filter:brightness(10)"> See More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <button class="heart-btn"><img src="../home.html/images/heart2.png" alt="Save" /></button>
+      <img src="../home.html/images/lenovo-computers-laptops-parts-genuine-lenovo-170-w-ac-adapter-20-v-45-n-0113-45-n-0114-for-lenovo-thinkpad-w-520-w-530-color-black-size-os-12.png" alt="Imprimante scanner Hp" />
+      <div class="item-info">
+        <div class="item-name">Imprimante scanner Hp</div>
+        <div class="item-footer">
+          <span class="item-location"><img src="../home.html/images/location2.png" alt="" /> Oran</span>
+          <button class="btn-see-more-sm"><img src="../home.html/images/plus2.png" alt="" style="width:12px;filter:brightness(10)"> See More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <button class="heart-btn"><img src="../home.html/images/heart3.png" alt="Save" /></button>
+      <img src="../home.html/images/lenovo-computers-laptops-parts-genuine-lenovo-170-w-ac-adapter-20-v-45-n-0113-45-n-0114-for-lenovo-thinkpad-w-520-w-530-color-black-size-os-15.png" alt="Lavinton Nightstand" />
+      <div class="item-info">
+        <div class="item-name">Lavinton Nightstand</div>
+        <div class="item-footer">
+          <span class="item-location"><img src="../home.html/images/location3.png" alt="" /> Bechar</span>
+          <button class="btn-see-more-sm"><img src="../home.html/images/plus3.png" alt="" style="width:12px;filter:brightness(10)"> See More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <button class="heart-btn"><img src="../home.html/images/heart4.png" alt="Save" /></button>
+      <img src="../home.html/images/lenovo-computers-laptops-parts-genuine-lenovo-170-w-ac-adapter-20-v-45-n-0113-45-n-0114-for-lenovo-thinkpad-w-520-w-530-color-black-size-os-14.png" alt="Vintage vans shoes" />
+      <div class="item-info">
+        <div class="item-name">Vintage vans shoes</div>
+        <div class="item-footer">
+          <span class="item-location"><img src="../home.html/images/location4.png" alt="" /> Tlemcen</span>
+          <button class="btn-see-more-sm"><img src="../home.html/images/plus4.png" alt="" style="width:12px;filter:brightness(10)"> See More</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <button class="heart-btn"><img src="../home.html/images/heart5.png" alt="Save" /></button>
+      <img src="../home.html/images/lenovo-computers-laptops-parts-genuine-lenovo-170-w-ac-adapter-20-v-45-n-0113-45-n-0114-for-lenovo-thinkpad-w-520-w-530-color-black-size-os-13.png" alt="Vintage Leather jacket" />
+      <div class="item-info">
+        <div class="item-name">Vintage Leather jacket</div>
+        <div class="item-footer">
+          <span class="item-location"><img src="../home.html/images/location5.png" alt="" /> Annaba</span>
+          <button class="btn-see-more-sm"><img src="../home.html/images/plus5.png" alt="" style="width:12px;filter:brightness(10)"> See More</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     ABOUT
+══════════════════════════════ -->
+<section class="about-section">
+  <div class="about-left">
+    <h2 class="about-title"><span>A</span>bout</h2>
+    <p class="about-subtitle">Where sharing builds community</p>
+  </div>
+  <div class="about-right">
+    <div class="about-imgs">
+      <img src="../home.html/images/gemini-generated-image-g-6-pwu-7-g-6-pwu-7-g-6-pw-10.png" alt="About 1" />
+      <img src="../home.html/images/gemini-generated-image-6-x-27-ti-6-x-27-ti-6-x-27-10.png" alt="About 2" style="margin-top:30px" />
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     INTRODUCTION
+══════════════════════════════ -->
+<section class="intro-section">
+  <img class="intro-img" src="../home.html/images/untitled-design-removebg-preview-10.png" alt="Introduction" />
+  <div class="intro-text">
+    <h3 class="intro-title"><span>Introduction</span> to our platform</h3>
+    <p class="intro-desc">
+      A community driven platform to give away what you don't need and help others get it for free.<br /><br />
+      Give items a second life while supporting people around you.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     MISSION PROCESS
+══════════════════════════════ -->
+<section class="mission-section">
+  <h2 class="mission-title">Our <span>Mission Process</span></h2>
+  <div class="mission-steps">
+    <div class="mission-step">
+      <div class="step-circle"><img src="../home.html/images/giving0.png" alt="encourage sharing" /></div>
+      <span class="step-label">encourage sharing</span>
+    </div>
+    <div class="mission-step">
+      <div class="step-circle"><img src="../home.html/images/recycling0.png" alt="reduce waste" /></div>
+      <span class="step-label">reduce waste</span>
+    </div>
+    <div class="mission-step">
+      <div class="step-circle"><img src="../home.html/images/guardian0.png" alt="caring society" /></div>
+      <span class="step-label">caring society</span>
+    </div>
+    <div class="mission-step">
+      <div class="step-circle"><img src="../home.html/images/sustainable-energy0.png" alt="create a more sustainable" /></div>
+      <span class="step-label">create a more sustainable</span>
+    </div>
+    <div class="mission-step">
+      <div class="step-circle"><img src="../home.html/images/crowd0.png" alt="build a supportive community" /></div>
+      <span class="step-label">build a supportive community</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     POINTS SYSTEM
+══════════════════════════════ -->
+<section class="points-section">
+  <div class="points-icons">
+    <img src="../home.html/images/mdi-coins-minus-outline0.svg" alt="Gain points" />
+    <img src="../home.html/images/vector0.svg" alt="Spend points" />
+  </div>
+  <div class="points-text">
+    <h2 class="points-title">Our <span>Points System</span></h2>
+    <ul class="points-list">
+      <li>Start with 5 points</li>
+      <li>Gain points by posting</li>
+      <li>Spend points by viewing items</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     WHY CHOOSE US
+══════════════════════════════ -->
+<section class="why-section">
+  <div class="why-header">
+    <h2 class="why-title">Why Choose Us</h2>
+    <p class="why-desc">Our platform offers a fair and organized way to share items for free while encouraging responsible use.</p>
+  </div>
+  <div class="why-cards">
+    <div class="why-card">
+      <img src="../home.html/images/delete-dollar0.png" alt="Free" />
+      <h4>Free</h4>
+      <p>Enjoy giving and receiving items without any cost.</p>
+    </div>
+    <div class="why-card">
+      <img src="../home.html/images/eco-driving-indicator1.png" alt="Eco friendly" />
+      <h4>Eco friendly</h4>
+      <p>By sharing instead of throwing away, we reduce waste and protect the environment.</p>
+    </div>
+    <div class="why-card">
+      <img src="../home.html/images/eco-driving-indicator0.png" alt="Simple" />
+      <h4>Simple</h4>
+      <p>A user friendly platform that makes sharing and finding items effortless.</p>
+    </div>
+    <div class="why-card">
+      <img src="../home.html/images/users0.png" alt="Community-based" />
+      <h4>Community-based</h4>
+      <p>Connect with others in your area and build a supportive, helpful community.</p>
+    </div>
+    <div class="why-card">
+      <img src="../home.html/images/checkmark0.png" alt="Sustainable" />
+      <h4>Sustainable</h4>
+      <p>Every shared item gets a second life, contributing to a long term culture of reuse.</p>
+    </div>
+    <div class="why-card">
+      <img src="../home.html/images/recycling1.png" alt="Responsible" />
+      <h4>Responsible</h4>
+      <p>Our points system ensures fair and responsible use of the platform by everyone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="display:flex; align-items:center; gap:4px; margin-bottom:10px;">
+  <img src="../home.html/images/group-11.svg" alt="T" style="height: 32px; filter: brightness(10);" />
+  <span style="font-size:22px; font-weight:700; color:#fff; font-family:'Poppins',sans-serif;">awfir</span>
+</a>
+      <p>A community driven platform for free sharing.</p>
+      <div class="social-row">
+        <a href="#"><img src="../home.html/images/ic-round-facebook0.svg" alt="Facebook" /></a>
+        <a href="#"><img src="../home.html/images/ri-instagram-fill0.svg" alt="Instagram" /></a>
+        <a href="#"><img src="../home.html/images/linked-in-circled0.png" alt="LinkedIn" /></a>
+      </div>
+      <p class="footer-info" style="margin-top:12px">info@Tawfir.com</p>
+    </div>
+
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="../offer an item/offer_an_item.html">Offer an item</a></li>
+        <li><a href="#">Find an item</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Support</h5>
+      <ul>
+        <li><a href="../faq/faq.html">FAQ / How it works</a></li>
+        <li><a href="#">Points system</a></li>
+        <li><a href="../contact us/contact_us.html">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Follow Us</h5>
+      <div class="social-row">
+        <a href="#"><img src="../home.html/images/ic-round-facebook0.svg" alt="Facebook" /></a>
+        <a href="#"><img src="../home.html/images/ri-instagram-fill0.svg" alt="Instagram" /></a>
+        <a href="#"><img src="../home.html/images/linked-in-circled0.png" alt="LinkedIn" /></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 <strong>Tawfir.</strong> All rights reserved.</span>
+    <span>
+      <a href="#">Terms of Service</a> &nbsp;·&nbsp;
+      <a href="#">Privacy Policy</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  /* ══════════════════════════
+     CAROUSEL
+  ══════════════════════════ */
+  const track = document.getElementById('carouselTrack');
+
+  function scrollCarousel(dir) {
+    const cardWidth = track.querySelector('.cat-card').offsetWidth + 20;
+    track.scrollBy({ left: dir * cardWidth * 2, behavior: 'smooth' });
+  }
+
+  /* ══════════════════════════
+     HERO SEARCH
+  ══════════════════════════ */
+  function handleSearch() {
+    const q = document.getElementById('heroSearch').value.trim();
+    if (q) {
+      // Filter visible item cards by name
+      const cards = document.querySelectorAll('.item-card');
+      cards.forEach(card => {
+        const name = card.querySelector('.item-name').textContent.toLowerCase();
+        card.style.display = name.includes(q.toLowerCase()) ? '' : 'none';
+      });
+      document.querySelector('.section-title').textContent = `Results for "${q}"`;
+      document.getElementById('itemsGrid').scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  // Search on Enter key
+  document.getElementById('heroSearch').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSearch();
+  });
+
+  /* ══════════════════════════
+     CATEGORY FILTER
+  ══════════════════════════ */
+  function filterByCategory(cat) {
+    document.querySelector('.section-title').textContent = cat;
+    // Reset all cards visible (would filter from real data in production)
+    document.querySelectorAll('.item-card').forEach(c => c.style.display = '');
+    document.getElementById('itemsGrid').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ══════════════════════════
+     HEART / WISHLIST TOGGLE
+  ══════════════════════════ */
+  document.querySelectorAll('.heart-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      btn.classList.toggle('active');
+      const img = btn.querySelector('img');
+      // Toggle tint
+      img.style.filter = btn.classList.contains('active')
+        ? 'invert(30%) sepia(100%) saturate(500%) hue-rotate(320deg)'
+        : '';
+    });
+  });
+
+  /* ══════════════════════════
+     NAVBAR ACTIVE ON SCROLL
+  ══════════════════════════ */
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    // Sticky nav shadow
+    const nav = document.querySelector('nav');
+    nav.style.boxShadow = scrollY > 10
+      ? '0 4px 20px rgba(0,0,0,0.12)'
+      : '0 2px 12px rgba(0,0,0,0.08)';
+  });
+</script>
+
+</body>
+</html>
